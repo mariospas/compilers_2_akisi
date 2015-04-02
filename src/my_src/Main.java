@@ -3,11 +3,11 @@ package my_src;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.File;
-import java.nio.file.Paths;
-import syntaxtree.*;
-import visitor.*;
-import parser.*;
+import java.util.HashMap;
+
+import parser.MiniJavaParser;
+import parser.ParseException;
+import syntaxtree.Goal;
 
 
 public class Main {
@@ -20,10 +20,10 @@ public class Main {
         try{
             fis = new FileInputStream(args[0]);
             MiniJavaParser parser = new MiniJavaParser(fis);
-            SemanticCheckVisitor check = new SemanticCheckVisitor();
-            Goal tree = parser.Goal();
-			tree.accept(check);
-			check.finalCheck();
+            Handle_main eval = new Handle_main();
+		    Goal root = parser.Goal();
+		    System.err.println("Program parsed successfully.");
+		    root.accept(eval);
         }
         catch(ParseException ex){
             System.out.println(ex.getMessage());
@@ -31,9 +31,9 @@ public class Main {
         catch(FileNotFoundException ex){
             System.err.println(ex.getMessage());
         }
-        catch(SemanticError ex){
+        /*catch(SemanticError ex){
             System.err.println(ex.getMessage());
-        }
+        }*/
 		catch(Exception e){
 			System.out.println("Internal Error.");
 		}
