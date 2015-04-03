@@ -3,7 +3,7 @@ package my_src;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.*;
 
 import parser.MiniJavaParser;
 import parser.ParseException;
@@ -24,6 +24,17 @@ public class Main {
 		    Goal root = parser.Goal();
 		    System.err.println("Program parsed successfully.");
 		    root.accept(eval);
+		    /*for (String name: eval.mainTable.keySet()){
+
+	            String key =name.toString();
+	            String value = eval.mainTable.get(name).toString();  
+	            System.out.println(key + " " + value);  
+	        } */
+		    Set keysetMain = eval.mainTable.keySet();
+		    System.out.println("Main args : " + keysetMain);
+		    Set keysetClass = eval.Table.keySet();
+		    System.out.println("Classes : " + keysetClass);
+		    
         }
         catch(ParseException ex){
             System.out.println(ex.getMessage());
@@ -31,9 +42,9 @@ public class Main {
         catch(FileNotFoundException ex){
             System.err.println(ex.getMessage());
         }
-        /*catch(SemanticError ex){
+        catch(SemError ex){
             System.err.println(ex.getMessage());
-        }*/
+        }
 		catch(Exception e){
 			System.out.println("Internal Error.");
 		}
