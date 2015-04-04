@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class Fun_or_Ident
 {
 	boolean function;   //true if function false if identifier
-	String Type;
+	String Type;         // identifier(int,float,etc) or function's return type
 	int numOfArgs;     //if function
 	HashMap<String,String> arg = new HashMap<String,String>();
 	HashMap<String,String> var = new HashMap<String,String>();

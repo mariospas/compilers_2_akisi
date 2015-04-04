@@ -12,9 +12,11 @@ public class Inside_class extends DepthFirstVisitor
 	HashMap<String,HashMap<String,Fun_or_Ident>> Table = new HashMap<String,HashMap<String,Fun_or_Ident>>();
 	HashMap<String,Fun_or_Ident> temp = new HashMap<String,Fun_or_Ident>();
 	HashMap<String,String> arg = new HashMap<String,String>();
+	HashMap<String,String> var; /*<Name,Type> */
 	
 	String className;
 	String type;
+	String extendName = null;
 	int count = 0;
 	
 	public void visit(Goal n) throws Exception, SemError
@@ -41,6 +43,7 @@ public class Inside_class extends DepthFirstVisitor
 		
 		//isos den xreiazete
 		n.f1.accept(this);
+		this.extendName = null;
 		
 		System.out.println("yeah3");
 		this.className = n.f1.f0.toString();  
@@ -69,6 +72,7 @@ public class Inside_class extends DepthFirstVisitor
 		
 		//isos den xreiazete
 		n.f1.accept(this);
+		this.extendName = n.f3.f0.toString();
 		
 		System.out.println("yeah2");
 		this.className = n.f1.f0.toString(); 
@@ -124,6 +128,9 @@ public class Inside_class extends DepthFirstVisitor
 	
 	public void visit(MethodDeclaration n) throws Exception, SemError
 	{
+		HashMap<String,String> var = new HashMap<String,String>(); 
+		this.var = var;
+		
 		HashMap<String,String> arg = new HashMap<String,String>(); 
 		this.arg = arg;
 		
@@ -131,15 +138,24 @@ public class Inside_class extends DepthFirstVisitor
 		this.count = 0;
 		
 		foi.function = true;
-		n.f0.accept(this);   //na balo ena global type
+		n.f1.accept(this);   //na balo ena global type
 		foi.Type = this.type;
 		
 		n.f4.accept(this);
 		foi.numOfArgs = this.count;
+		//System.out.println(foi.numOfArgs);
 		foi.arg = this.arg;
+		
+		n.f7.accept(this);
+		foi.var = this.var;
 		
 		System.out.println("#"+n.f2.f0.toString());
 		Assume.assumeTrue(this.temp.containsKey("*"+n.f2.f0.toString()));
+		if(this.extendName != null)
+		{
+			this.checkExtendMethods("#"+n.f2.f0.toString(), foi);
+		}
+	    this.VarArgCheck(foi);
 		this.temp.put("#"+n.f2.f0.toString(), foi); //(name,foi)
 	}
 	
@@ -155,7 +171,7 @@ public class Inside_class extends DepthFirstVisitor
 		Assume.assumeTrue(this.arg.containsKey(n.f1.f0.toString()));
 		n.f0.accept(this);
 		//type
-		this.arg.put(n.f1.f0.toString(), type); // <Name,Type>		
+		this.arg.put(n.f1.f0.toString(), this.type); // <Name,Type>		
 	}
 	
 	
@@ -213,6 +229,67 @@ public class Inside_class extends DepthFirstVisitor
 	{	
 		this.type = n.f0.toString();
 		//return n.f0.toString();
+	}
+	
+	
+	
+	
+	public void checkExtendMethods(String function,Fun_or_Ident ExtFoi) throws Exception, SemError
+	{
+		Fun_or_Ident foi;
+		
+		HashMap<String,Fun_or_Ident> OriClass = this.Table.get(this.extendName);
+		
+		Set<String> funNames = OriClass.keySet();
+		for(Iterator<String> it = funNames.iterator(); it.hasNext();)
+		{
+			
+			String fName = it.next().toString();
+			//System.err.println(fName+" "+function);
+			if(fName.equals(function))
+			{
+				foi = OriClass.get(fName);
+				if(foi.function == true)
+				{
+					//System.err.println("Type "+foi.Type+" "+ExtFoi.Type);
+					//System.err.println("NumArgs "+foi.numOfArgs+" "+ExtFoi.numOfArgs);
+					Assume.assumeTrue(foi.Type != ExtFoi.Type);
+					Assume.assumeTrue(foi.numOfArgs != ExtFoi.numOfArgs);
+					//check args
+					Set<String> arg1 = foi.arg.keySet();
+					
+					Set<String> arg2 = ExtFoi.arg.keySet();
+					Iterator<String> it2 = arg2.iterator();
+					
+					for(Iterator<String> it1 = arg1.iterator(); it1.hasNext();)
+					{
+						String t1 = it1.next();
+						String t2 = it2.next();
+						//System.err.println(t1+" "+t2);
+						Assume.assumeTrue(t1!=t2);
+					}
+				}
+			}
+		}
+	}
+	
+	//same arguments and declared variables
+	public void VarArgCheck(Fun_or_Ident foi) throws Exception, SemError
+	{
+		Set<String> arg_names = foi.arg.keySet();
+		Set<String> var_names = foi.var.keySet();
+		
+		for(Iterator<String> it1 = arg_names.iterator(); it1.hasNext();)
+		{
+			System.err.println("AAAAA");
+			for(Iterator<String> it2 = var_names.iterator(); it2.hasNext();)
+			{
+				String t1 = it1.next();
+				String t2 = it2.next();
+				System.err.println("AAAAA"+t1+" "+t2);
+				Assume.assumeTrue(t1==t2);
+			}
+		}
 	}
 	
 	
