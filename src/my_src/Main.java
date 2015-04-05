@@ -39,6 +39,8 @@ public class Main {
 		    //inside_class
 		    Inside_class eval2 = new Inside_class(root,eval.Table);
 		    
+		    //inside_method
+		    Inside_methods eval3 = new Inside_methods(root, eval2.DeclClasses, eval2.Table);
 		    
         }
         catch(ParseException ex){
