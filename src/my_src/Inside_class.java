@@ -13,6 +13,7 @@ public class Inside_class extends DepthFirstVisitor
 	HashMap<String,Fun_or_Ident> temp = new HashMap<String,Fun_or_Ident>();
 	HashMap<String,String> arg = new HashMap<String,String>();
 	HashMap<String,String> var; /*<Name,Type> */
+	HashMap<String,String> DeclClasses;
 	
 	String className;
 	String type;
@@ -20,8 +21,9 @@ public class Inside_class extends DepthFirstVisitor
 	int count = 0;
 	boolean fromMethod;
 	
-	public void visit(Goal n) throws Exception, SemError
+	public Inside_class(Goal n, HashMap<String,String> DecClasses) throws Exception, SemError
 	{
+		DeclClasses = DecClasses;
 		n.f0.accept(this);
 		n.f1.accept(this);
 	}
@@ -257,38 +259,43 @@ public class Inside_class extends DepthFirstVisitor
 	{
 		Fun_or_Ident foi;
 		
-		HashMap<String,Fun_or_Ident> OriClass = this.Table.get(this.extendName);
 		
-		Set<String> funNames = OriClass.keySet();
-		for(Iterator<String> it = funNames.iterator(); it.hasNext();)
+		//check all extend parents
+		while(this.extendName != null)
 		{
-			
-			String fName = it.next().toString();
-			//System.err.println(fName+" "+function);
-			if(fName.equals(function))
+			HashMap<String,Fun_or_Ident> OriClass = this.Table.get(this.extendName);
+			Set<String> funNames = OriClass.keySet();
+			for(Iterator<String> it = funNames.iterator(); it.hasNext();)
 			{
-				foi = OriClass.get(fName);
-				if(foi.function == true)
+				
+				String fName = it.next().toString();
+				//System.err.println(fName+" "+function);
+				if(fName.equals(function))
 				{
-					//System.err.println("Type "+foi.Type+" "+ExtFoi.Type);
-					//System.err.println("NumArgs "+foi.numOfArgs+" "+ExtFoi.numOfArgs);
-					Assume.assumeTrue(foi.Type != ExtFoi.Type);
-					Assume.assumeTrue(foi.numOfArgs != ExtFoi.numOfArgs);
-					//check args
-					Set<String> arg1 = foi.arg.keySet();
-					
-					Set<String> arg2 = ExtFoi.arg.keySet();
-					Iterator<String> it2 = arg2.iterator();
-					
-					for(Iterator<String> it1 = arg1.iterator(); it1.hasNext();)
+					foi = OriClass.get(fName);
+					if(foi.function == true)
 					{
-						String t1 = it1.next();
-						String t2 = it2.next();
-						//System.err.println(t1+" "+t2);
-						Assume.assumeTrue(t1!=t2);
+						//System.err.println("Type "+foi.Type+" "+ExtFoi.Type);
+						//System.err.println("NumArgs "+foi.numOfArgs+" "+ExtFoi.numOfArgs);
+						Assume.assumeTrue(foi.Type != ExtFoi.Type);
+						Assume.assumeTrue(foi.numOfArgs != ExtFoi.numOfArgs);
+						//check args
+						Set<String> arg1 = foi.arg.keySet();
+						
+						Set<String> arg2 = ExtFoi.arg.keySet();
+						Iterator<String> it2 = arg2.iterator();
+						
+						for(Iterator<String> it1 = arg1.iterator(); it1.hasNext();)
+						{
+							String t1 = it1.next();
+							String t2 = it2.next();
+							//System.err.println(t1+" "+t2);
+							Assume.assumeTrue(t1!=t2);
+						}
 					}
 				}
 			}
+			this.extendName = this.DeclClasses.get(this.extendName);
 		}
 	}
 	

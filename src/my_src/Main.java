@@ -37,8 +37,8 @@ public class Main {
 		    System.out.println("Classes : " + keysetClass);
 		    
 		    //inside_class
-		    Inside_class eval2 = new Inside_class();
-		    root.accept(eval2);
+		    Inside_class eval2 = new Inside_class(root,eval.Table);
+		    
 		    
         }
         catch(ParseException ex){
