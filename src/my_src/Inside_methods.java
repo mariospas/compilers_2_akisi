@@ -107,23 +107,24 @@ public class Inside_methods extends DepthFirstVisitor
 	public void visit(PrimaryExpression n) throws Exception, SemError
 	{
 		n.f0.accept(this);
+		//System.out.println("primaryExpr = "+this.primaryExpr);
 		if(this.primaryExpr == "this")
 		{
-			this.isthis = true;
+			//System.out.println("OOOOOOOO = "+this.primaryExpr);
+			this.isthis = false;
 		}
+		this.primaryExpr = "-";
 	}
 	
 	
 	/**
 	 * Grammar production:
-	 * <PRE>
 	 * f0 -> PrimaryExpression()
 	 * f1 -> "."
 	 * f2 -> Identifier()
 	 * f3 -> "("
 	 * f4 -> ( ExpressionList() )?
 	 * f5 -> ")"
-	 * </PRE>
 	**/
 	public void visit(MessageSend n) throws Exception, SemError
 	{
@@ -153,6 +154,33 @@ public class Inside_methods extends DepthFirstVisitor
 	}
 	
 	/**
+	* f0 -> <INTEGER_LITERAL>
+	*/
+    public void visit(IntegerLiteral n) throws Exception, SemError
+    {
+    	this.primaryExpr = "integer_literal";
+        n.f0.accept(this);
+    }
+	
+	   /**
+	* f0 -> "true"
+	*/
+    public void visit(TrueLiteral n) throws Exception, SemError
+    {
+    	this.primaryExpr = "true";
+        n.f0.accept(this);
+    }
+	
+	   /**
+	* f0 -> "false"
+	*/
+	public void visit(FalseLiteral n) throws Exception, SemError
+	{
+		this.primaryExpr = "false";
+        n.f0.accept(this);
+    }
+	
+	/**
 	 * Grammar production:
 	 * f0 -> "("
 	 * f1 -> Expression()
@@ -175,26 +203,46 @@ public class Inside_methods extends DepthFirstVisitor
 			//check if exist constructor
 			if(this.isnew)
 			{
+				//System.out.println("exist new");
 				this.isnew = false;
 				Assume.assumeTrue(!(this.DeclClasses.containsKey(n.f0.toString())));
+				//System.out.println("finish exist new");
 				return;
 			}
 			
 			//check all
+			System.out.println("#####  "+n.f0.toString());
+			//System.out.println("Classname = "+this.className);
+			System.out.println("Function = "+this.function);
 			HashMap<String,Fun_or_Ident> func = this.Table.get(this.className);
 			Fun_or_Ident foi = func.get(this.function);
 			
 			if(this.isthis == false)
 			{
-				if(foi.var.containsKey(n.f0.toString())) return;
-				else if(foi.arg.containsKey(n.f0.toString())) return;
-				else if(func.containsKey(n.f0.toString())) return;
+				//System.out.println("not this expr");
+				//System.out.println("#"+n.f0.toString());
+				if(foi.var.containsKey(n.f0.toString()))
+				{
+					this.primaryExpr = "var";
+					return;
+				}
+				else if(foi.arg.containsKey(n.f0.toString()))
+				{
+					this.primaryExpr = "arg";
+					return;
+				}
+				else if(func.containsKey(n.f0.toString()))
+				{
+					this.primaryExpr = "func";
+					return;
+				}
 				else
 				{
 					boolean flag = false;
 					String extendedClass = this.DeclClasses.get(this.className);
 					while(extendedClass != null)
 					{
+						//System.out.println(extendedClass);
 						func = this.Table.get(extendedClass);
 						if(func.containsKey(n.f0.toString()))
 						{
@@ -209,7 +257,13 @@ public class Inside_methods extends DepthFirstVisitor
 			}
 			else
 			{
+				//System.out.println("this expr");
 				this.isthis = false;
+				
+				//System.out.println("#"+n.f0.toString());
+				//Set keysetMain = func.keySet();
+			    //System.out.println("Func keyset : " + keysetMain);
+				
 				Assume.assumeTrue(!func.containsKey("#"+n.f0.toString()));
 			}
 			
