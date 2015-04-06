@@ -58,7 +58,7 @@ public class Type_check extends DepthFirstVisitor
 	**/
 	public void visit(MainClass n) throws Exception, SemError
 	{
-		System.out.println("MainClass");
+		//System.out.println("MainClass");
 		this.className = "main";
 		n.f15.accept(this);
 	}
@@ -129,9 +129,9 @@ public class Type_check extends DepthFirstVisitor
 		n.f1.accept(this);    // keep type
 		String type1 = this.type;
 		
-		System.out.println("#####  "+n.f1.f0.toString());
+		//System.out.println("#####  "+n.f1.f0.toString());
 		//System.out.println("Classname = "+this.className);
-		System.out.println("Function = "+this.function);
+		//System.out.println("Function = "+this.function);
 		HashMap<String,Fun_or_Ident> func = this.Table.get(this.className);
 		Fun_or_Ident foi = func.get(this.function);
 		
@@ -142,20 +142,7 @@ public class Type_check extends DepthFirstVisitor
 		
 		Assume.assumeTrue(foi.arg.size() != this.arg.size());
 		
-		//System.out.println("DSDSD");
-		//arguments checks
-		/*int i = 0;
-		Set<String> arguments = foi.arg.keySet();
-		for(Iterator<String> it = arguments.iterator(); it.hasNext();)
-		{
-			
-			String arg_name = it.next().toString();
-			//Assume.assumeTrue(!(foi.arg.get(arg_name).equals(this.arg.get(i))));
-			System.out.println("type1 = "+this.arg.get(i)+" type2 = "+foi.argTypes.get(i));
-			i++;
-		}*/
-		this.arg.clear();    //isos den xreiazete
-		System.out.println("DSDSD222");
+		this.arg.clear();  
 		
 		//statement
 		n.f8.accept(this);
@@ -274,7 +261,6 @@ public class Type_check extends DepthFirstVisitor
     */
 	public void visit(Statement n) throws Exception, SemError
 	{
-		System.out.println("SKAATAA");
 		n.f0.accept(this);
 	}
 	
@@ -296,14 +282,13 @@ public class Type_check extends DepthFirstVisitor
     */
 	public void visit(AssignmentStatement n) throws Exception, SemError
 	{
-		System.out.println("AssignmentStatement");
+		//System.out.println("AssignmentStatement");
 		n.f0.accept(this);
-		System.out.println("TYPEaaaa " + this.type);
 		String idType = this.type;
-		System.out.println("AssignmentStatement " + idType);
+		//System.out.println("AssignmentStatement " + idType);
 		n.f2.accept(this);
 		String exprType = this.type;
-		System.out.println(exprType +" "+ this.isnew);
+		//System.out.println(exprType +" "+ this.isnew);
 		
 		if(this.isnew)
 		{
@@ -399,9 +384,9 @@ public class Type_check extends DepthFirstVisitor
     */
 	public void visit(PrintStatement n) throws Exception, SemError
 	{
-		System.out.println("Print Statement");
+		//System.out.println("Print Statement");
 		n.f2.accept(this);
-		System.out.println("Print Statement Type : "+this.type);
+		//System.out.println("Print Statement Type : "+this.type);
 		Assume.assumeTrue(this.type != "int" && this.type != "boolean");
 	}
 	
@@ -423,7 +408,7 @@ public class Type_check extends DepthFirstVisitor
     */
 	public void visit(Expression n) throws Exception, SemError
 	{
-		System.out.println("Expression ");
+		//System.out.println("Expression ");
 		n.f0.accept(this);
 		this.arg.add(this.type);
 	}
@@ -566,7 +551,7 @@ public class Type_check extends DepthFirstVisitor
 		n.f0.accept(this);
 		String type_r = this.type;
 		
-		if(this.type != "this")
+		if(!this.type.equals("this"))
 		{
 			Assume.assumeTrue(!this.DeclClasses.containsKey(this.type));
 			clas = this.type;
@@ -575,7 +560,7 @@ public class Type_check extends DepthFirstVisitor
 		
 		String meth = "#"+n.f2.f0.toString();  //i have the method an ontos uparxei
 		
-		System.out.println("#####  "+meth);
+		//System.out.println("#####  "+meth);
 		//System.out.println("Classname = "+this.className);
 		HashMap<String,Fun_or_Ident> func = this.Table.get(clas);
 		Fun_or_Ident foi = func.get(meth);
@@ -584,7 +569,7 @@ public class Type_check extends DepthFirstVisitor
 		this.arg = new ArrayList<String>();
 		n.f4.accept(this);
 		
-		System.out.println("####%%%%");
+		//System.out.println("####%%%%");
 		Assume.assumeTrue(foi.arg.size() != this.arg.size());
 		
 		//arguments checks
@@ -596,7 +581,7 @@ public class Type_check extends DepthFirstVisitor
 			String arg_name = it.next().toString();
 			String type1 = foi.arg.get(arg_name);
 			String argFromList = this.arg.get(i);
-			System.out.println("arg_name = "+arg_name+" type = "+type1+" typelist = " + argFromList);
+			//System.out.println("arg_name = "+arg_name+" type = "+type1+" typelist = " + argFromList);
 			String foiArgTypes = foi.argTypes.get(i);
 			
 			if(!foiArgTypes.equals(argFromList))
@@ -604,7 +589,7 @@ public class Type_check extends DepthFirstVisitor
 				boolean flag3 = true;
 				if(argFromList.equals("this"))
 				{
-					System.out.println("in this "+foiArgTypes+this.className);
+					//System.out.println("in this "+foiArgTypes+this.className);
 					if(foiArgTypes.equals(this.className))
 					{
 						//this.arg.clear();
@@ -618,7 +603,7 @@ public class Type_check extends DepthFirstVisitor
 						String extendname = this.DeclClasses.get(this.className);
 						while(extendname != null)
 						{
-							System.out.println(foiArgTypes+" "+extendname);
+							//System.out.println(foiArgTypes+" "+extendname);
 							if(foiArgTypes.equals(extendname))
 							{
 								this.arg.clear();
@@ -635,12 +620,12 @@ public class Type_check extends DepthFirstVisitor
 				if(flag3)
 				{
 					String extend = this.DeclClasses.get(argFromList);
-					System.out.println("type1 "+foiArgTypes+" argfromlist " + argFromList);
+					//System.out.println("type1 "+foiArgTypes+" argfromlist " + argFromList);
 					boolean flag2 = true;
 					while(extend != null)
 					{
 						//extend = this.DeclClasses.get(argFromList);
-						System.out.println(foiArgTypes +" " + extend);
+						//System.out.println(foiArgTypes +" " + extend);
 						if(foiArgTypes.equals(extend))
 						{
 							this.arg.clear();
@@ -658,7 +643,7 @@ public class Type_check extends DepthFirstVisitor
 		}
 		this.arg.clear();
 		this.type = foi.Type;
-		System.out.println("Finish Message Send");
+		//System.out.println("Finish Message Send");
 		
 	}
 	
@@ -710,7 +695,7 @@ public class Type_check extends DepthFirstVisitor
     */
 	public void visit(PrimaryExpression n) throws Exception, SemError
 	{
-		System.out.println("PrimaryExpression ");
+		//System.out.println("PrimaryExpression ");
 		n.f0.accept(this);
 	}
 	
@@ -755,7 +740,7 @@ public class Type_check extends DepthFirstVisitor
     */
 	public void visit(ArrayAllocationExpression n) throws Exception, SemError
 	{
-		System.out.println("ArrayAllocationExpression ");
+		//System.out.println("ArrayAllocationExpression ");
 		n.f3.accept(this);
 		Assume.assumeTrue(!this.type.equals("int"));
 		this.type = "intArray";
@@ -769,10 +754,10 @@ public class Type_check extends DepthFirstVisitor
 	*/
 	public void visit(AllocationExpression n) throws Exception, SemError
 	{
-		System.out.println("AllocationExpression ");
+		//System.out.println("AllocationExpression ");
 		this.isnew = true;
 		n.f1.accept(this);
-		System.out.println("finish AllocationExpression ");
+		//System.out.println("finish AllocationExpression ");
 	}
 	
 	/**
@@ -808,7 +793,7 @@ public class Type_check extends DepthFirstVisitor
 	{
 		String var = n.f0.toString();
 		String type = null;
-		System.out.println("Identifier "+var);
+		//System.out.println("Identifier "+var);
 		
 		if(this.isclass == false)
 		{
@@ -823,17 +808,17 @@ public class Type_check extends DepthFirstVisitor
 			if(foi.var.containsKey(var))
 			{
 				type = foi.var.get(var);
-				System.out.println("Var = "+type);
+				//System.out.println("Var = "+type);
 			}
 			else if(foi.arg.containsKey(var))
 			{
 				type = foi.arg.get(var);
-				System.out.println("Arg = "+type);
+				//System.out.println("Arg = "+type);
 			}
 			else if(foi2 != null && foi2.function == false)
 			{
 				type = foi2.Type;
-				System.out.println("Var foi2 = "+type);
+				//System.out.println("Var foi2 = "+type);
 			}
 			else
 			{

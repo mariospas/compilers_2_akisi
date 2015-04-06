@@ -47,13 +47,8 @@ public class Handle_main extends DepthFirstVisitor
 	{
 		
 		this.mainTable.put(n.f11.f0.toString(), "String");
-		System.out.println(n.f11.f0.toString());
-		/*for (String name: this.mainTable.keySet()){
-
-            String key =name.toString();
-            String value = this.mainTable.get(name).toString();  
-            System.out.println(key + " " + value);  
-        }*/ 
+		//System.out.println(n.f11.f0.toString());
+		
 		n.f14.accept(this);	
 		n.f15.accept(this);
 	}
@@ -68,7 +63,7 @@ public class Handle_main extends DepthFirstVisitor
 	{
 		Assume.assumeTrue(this.mainTable.containsKey(n.f1.f0.toString())) ;
 		this.mainTable.put(n.f1.f0.toString(), n.f0.toString()); 
-		System.out.println(n.f1.f0.toString());
+		//System.out.println(n.f1.f0.toString());
 	}
 	
 	//Class decl
@@ -85,7 +80,7 @@ public class Handle_main extends DepthFirstVisitor
 	{
 		Assume.assumeTrue(this.Table.containsKey(n.f1.f0.toString())) ;
 		this.Table.put(n.f1.f0.toString(), null); 
-		System.out.println(n.f1.f0.toString());
+		//System.out.println(n.f1.f0.toString());
 	}
 	
 	//Class extends
@@ -105,7 +100,7 @@ public class Handle_main extends DepthFirstVisitor
 	{
 		Assume.assumeTrue(this.Table.containsKey(n.f1.f0.toString())) ;
 		this.Table.put(n.f1.f0.toString(), n.f3.f0.toString()); 
-		System.out.println(n.f1.f0.toString());
+		//System.out.println(n.f1.f0.toString());
 		this.PreDeclClass(n.f3.f0.toString());
 	}
 	

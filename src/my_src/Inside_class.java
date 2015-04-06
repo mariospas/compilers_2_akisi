@@ -49,12 +49,13 @@ public class Inside_class extends DepthFirstVisitor
 		n.f1.accept(this);
 		this.extendName = null;
 		
-		System.out.println("yeah3");
+		//System.out.println("yeah3");
 		this.className = n.f1.f0.toString();  
 		this.fromMethod = false;
 		n.f3.accept(this);
 		n.f4.accept(this);
 		this.Table.put(className, temp); //(ClassName,(Name,Fun_or_Ident))
+		//System.out.println("finish Class");
 	}
 	
 	//Class extends
@@ -79,12 +80,13 @@ public class Inside_class extends DepthFirstVisitor
 		n.f1.accept(this);
 		this.extendName = n.f3.f0.toString();
 		
-		System.out.println("yeah2");
+		//System.out.println("yeah2");
 		this.className = n.f1.f0.toString();
 		this.fromMethod = false;
 		n.f5.accept(this);
 		n.f6.accept(this);
 		this.Table.put(className, temp); //(ClassName,(Name,Fun_or_Ident))
+		//System.out.println("finish ExtendClass");
 	}
 	
 	//var decl
@@ -105,7 +107,7 @@ public class Inside_class extends DepthFirstVisitor
 		foi.function = false;
 		n.f0.accept(this);
 		foi.Type = this.type;
-		System.out.println(foi.Type);
+		//System.out.println(foi.Type);
 		//System.out.println("yeah1");
 		
 		if(this.fromMethod == true)
@@ -115,7 +117,7 @@ public class Inside_class extends DepthFirstVisitor
 		}
 		else if(this.fromMethod == false)
 		{
-			System.out.println(n.f1.f0.toString());
+			//System.out.println(n.f1.f0.toString());
 			Assume.assumeTrue(this.temp.containsKey(n.f1.f0.toString()));
 			this.temp.put(n.f1.f0.toString(), foi); //(name,foi)
 		}
@@ -167,11 +169,11 @@ public class Inside_class extends DepthFirstVisitor
 		n.f7.accept(this);
 		foi.var = this.var;
 		
-		System.out.println("#"+n.f2.f0.toString());
+		//System.out.println("#"+n.f2.f0.toString());
 		Set keysetMain = this.arg.keySet();
-	    System.out.println("args : " + keysetMain);
+	    //System.out.println("args : " + keysetMain);
 	    Set keysetVar = this.var.keySet();
-	    System.out.println("var : " + keysetVar);
+	    //System.out.println("var : " + keysetVar);
 	    
 		Assume.assumeTrue(this.temp.containsKey("*"+n.f2.f0.toString()));
 		if(this.extendName != null)
@@ -182,6 +184,7 @@ public class Inside_class extends DepthFirstVisitor
 	    this.VarArgCheck(foi);
 	    //System.out.println("EDO");
 		this.temp.put("#"+n.f2.f0.toString(), foi); //(name,foi)
+		//System.out.println("Finish method");
 	}
 	
 	
@@ -313,14 +316,16 @@ public class Inside_class extends DepthFirstVisitor
 		for(Iterator<String> it1 = arg_names.iterator(); it1.hasNext();)
 		{
 			String t1 = it1.next();
-			System.out.println("VarArgCheck t1 = "+t1);
+			//System.out.println("VarArgCheck t1 = "+t1);
 			for(Iterator<String> it2 = var_names.iterator(); it2.hasNext();)
 			{
 				String t2 = it2.next();
-				System.out.println("VarArgCheck t2 "+t2);
-				Assume.assumeTrue(t1==t2);
+				//System.out.println("VarArgCheck t2 "+t2);
+				Assume.assumeTrue(t1.equals(t2));
+				
 			}
 		}
+		//System.out.println("Finish VarArgCheck t2 ");
 	}
 	
 	

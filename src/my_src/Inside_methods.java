@@ -214,9 +214,9 @@ public class Inside_methods extends DepthFirstVisitor
 			}
 			
 			//check all
-			System.out.println("#####  "+n.f0.toString());
-			//System.out.println("Classname = "+this.className);
-			System.out.println("Function = "+this.function);
+			//System.out.println("#####  "+n.f0.toString());
+			////System.out.println("Classname = "+this.className);
+			//System.out.println("Function = "+this.function);
 			HashMap<String,Fun_or_Ident> func = this.Table.get(this.className);
 			Fun_or_Ident foi = func.get(this.function);
 			
