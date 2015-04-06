@@ -17,7 +17,7 @@ public class Inside_methods extends DepthFirstVisitor
 	String className;
 	String function;
 	String primaryExpr;
-	
+
 	public Inside_methods(Goal n, HashMap<String,String> DecClasses,HashMap<String,HashMap<String,Fun_or_Ident>>  Table1) throws Exception, SemError
 	{
 		DeclClasses = DecClasses;
@@ -90,6 +90,9 @@ public class Inside_methods extends DepthFirstVisitor
 		n.f8.accept(this);
 		n.f10.accept(this);
 	}
+	
+	
+	
 	
 	
 	/**

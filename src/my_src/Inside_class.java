@@ -14,6 +14,7 @@ public class Inside_class extends DepthFirstVisitor
 	HashMap<String,String> arg = new HashMap<String,String>();
 	HashMap<String,String> var; /*<Name,Type> */
 	HashMap<String,String> DeclClasses;
+	ArrayList<String> argList;  //arguments with order of insertion
 	
 	String className;
 	String type;
@@ -154,10 +155,13 @@ public class Inside_class extends DepthFirstVisitor
 		n.f1.accept(this);   //na balo ena global type
 		foi.Type = this.type;
 		
+		this.argList = new ArrayList<String>();
 		n.f4.accept(this);
 		foi.numOfArgs = this.count;
 		//System.out.println(foi.numOfArgs);
 		foi.arg = this.arg;
+		foi.argTypes = new ArrayList<String>(this.argList);
+		this.argList.clear();
 		
 		this.fromMethod = true;
 		n.f7.accept(this);
@@ -174,9 +178,9 @@ public class Inside_class extends DepthFirstVisitor
 		{
 			this.checkExtendMethods("#"+n.f2.f0.toString(), foi);
 		}
-		System.out.println("EDO");
+		//System.out.println("EDO");
 	    this.VarArgCheck(foi);
-	    System.out.println("EDO");
+	    //System.out.println("EDO");
 		this.temp.put("#"+n.f2.f0.toString(), foi); //(name,foi)
 	}
 	
@@ -192,6 +196,7 @@ public class Inside_class extends DepthFirstVisitor
 		Assume.assumeTrue(this.arg.containsKey(n.f1.f0.toString()));
 		n.f0.accept(this);
 		//type
+		this.argList.add(this.type);
 		this.arg.put(n.f1.f0.toString(), this.type); // <Name,Type>		
 	}
 	
@@ -218,7 +223,7 @@ public class Inside_class extends DepthFirstVisitor
 	**/
 	public void visit(ArrayType n) throws Exception, SemError
 	{	
-		this.type = n.f0.toString()+n.f1.toString()+n.f2.toString();
+		this.type = "intArray";
 		//return n.f0.toString()+n.f1.toString()+n.f2.toString();
 	}
 	
@@ -228,7 +233,7 @@ public class Inside_class extends DepthFirstVisitor
 	 */	
 	public void visit(BooleanType n) throws Exception, SemError
 	{	
-		this.type = n.f0.toString();
+		this.type = "boolean";
 		//return n.f0.toString();
 	}
 	
@@ -238,7 +243,7 @@ public class Inside_class extends DepthFirstVisitor
 	**/
 	public void visit(IntegerType n) throws Exception, SemError
 	{	
-		this.type = n.f0.toString();
+		this.type = "int";
 		//return n.f0.toString();
 	}
 	
