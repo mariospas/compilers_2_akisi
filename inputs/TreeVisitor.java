@@ -16,6 +16,7 @@ class TV {
 	int nti ;
 	MyVisitor v ;
 
+	//nti = this.Start();
 	root = new Tree();
 	ntb = root.Init(16);
 	ntb = root.Print();

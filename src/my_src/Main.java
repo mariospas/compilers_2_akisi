@@ -42,6 +42,10 @@ public class Main {
 		    //inside_method
 		    Inside_methods eval3 = new Inside_methods(root, eval2.DeclClasses, eval2.Table);
 		    
+		    //type check
+		    System.out.println("^^^^^^^^^^ prin type checking ^^^^^^^^^^^^");
+		    Type_check eval4 = new Type_check(root, eval3.DeclClasses, eval3.Table, eval.mainTable);
+		    System.out.println("^^^^^^^^^^^^ telos type checking ^^^^^^^^^^");
         }
         catch(ParseException ex){
             System.out.println(ex.getMessage());
